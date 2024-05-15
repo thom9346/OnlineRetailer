@@ -1,4 +1,4 @@
-﻿Feature: Feature1
+﻿Feature: Customer
 
 A short summary of the feature
 

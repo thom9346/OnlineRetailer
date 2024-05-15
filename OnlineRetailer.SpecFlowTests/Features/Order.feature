@@ -2,14 +2,6 @@
 
 A short summary of the feature
 
-
-Scenario: User is gathered with credits available
-	Given A user is found
-	And The user has credits
-	When The credit amount is fetched
-	Then the credit amount is > 0
-
-
 @tag1
 Scenario Outline: User places multiple orders
 	Given A user is created
