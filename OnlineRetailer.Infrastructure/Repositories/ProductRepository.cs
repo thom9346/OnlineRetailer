@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using OnlineRetailer.Core;
 using OnlineRetailer.Core.Entities;
 using OnlineRetailer.Infrastructure;
@@ -23,12 +24,13 @@ namespace OnlineRetailer.Infrastructure.Repositories
 
         public void Edit(Product entity)
         {
-            throw new NotImplementedException();
+            db.Entry(entity).State = EntityState.Modified;
+            db.SaveChanges();
         }
 
         public Product Get(int id)
         {
-            throw new NotImplementedException();
+            return db.Product.Find(id);
         }
 
         public IEnumerable<Product> GetAll()

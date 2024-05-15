@@ -26,11 +26,12 @@ namespace OnlineRetailer.Infrastructure.Repositories
         public void Edit(Order entity)
         {
             db.Entry(entity).State = EntityState.Modified;
+            db.SaveChanges();
         }
 
         public Order Get(int id)
         {
-            throw new NotImplementedException();
+            return db.Order.Find(id);
         }
 
         public IEnumerable<Order> GetAll()
@@ -40,7 +41,12 @@ namespace OnlineRetailer.Infrastructure.Repositories
 
         public void Remove(int id)
         {
-            throw new NotImplementedException();
+            var entity = db.Order.Find(id);
+            if (entity != null)
+            {
+                db.Order.Remove(entity);
+                db.SaveChanges();
+            }
         }
     }
 }

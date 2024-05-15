@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using OnlineRetailer.Core;
 using OnlineRetailer.Core.Entities;
+using OnlineRetailer.Core.Interfaces;
+using OnlineRetailer.Core.Services;
 using OnlineRetailer.Infrastructure;
 using OnlineRetailer.Infrastructure.Repositories;
 
@@ -20,6 +22,7 @@ namespace OnlineRetailer.WebApi
             builder.Services.AddScoped<IRepository<Product>, ProductRepository>();
             builder.Services.AddScoped<IRepository<Customer>, CustomerRepository>();
             builder.Services.AddScoped<IRepository<Order>, OrderRepository>();
+            builder.Services.AddScoped<IOrderManager, OrderManager>();
 
             builder.Services.AddTransient<IDbInitializer, DbInitializer>();
 

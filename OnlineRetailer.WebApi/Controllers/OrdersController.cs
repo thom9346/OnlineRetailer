@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using OnlineRetailer.Core;
 using OnlineRetailer.Core.Entities;
+using OnlineRetailer.Core.Interfaces;
+using OnlineRetailer.Core.Services;
 
 
 
@@ -12,10 +14,12 @@ namespace OnlineRetailer.WebApi.Controllers
     public class OrdersController : Controller
     {
         private readonly IRepository<Order> repository;
+        private readonly IOrderManager orderManager;
 
-        public OrdersController(IRepository<Order> repos)
+        public OrdersController(IRepository<Order> repos, IOrderManager manager)
         {
             repository = repos;
+            orderManager = manager;
         }
 
         // GET: orders
@@ -44,20 +48,12 @@ namespace OnlineRetailer.WebApi.Controllers
             {
                 return BadRequest();
             }
+            if (!orderManager.CreateOrder(order))
+            {
+                return BadRequest("Order creation failed due to insufficient stock or other reasons.");
+            }
 
-            //bool created = bookingManager.CreateBooking(booking);
-
-            //if (created)
-            //{
-            //    return CreatedAtRoute("GetBookings", null);
-            //}
-            //else
-            //{
-            //    return Conflict("The booking could not be created. All rooms are occupied. Please try another period.");
-            //}
-
-            repository.Add(order);
-            return CreatedAtRoute("GetOrders", null);
+            return CreatedAtRoute("GetOrder", new { id = order.Id }, order);
         }
 
         // PUT bookings/5
@@ -70,20 +66,11 @@ namespace OnlineRetailer.WebApi.Controllers
                 return BadRequest();
             }
 
-            var modifiedOrder = repository.Get(id);
-
-            if (modifiedOrder == null)
+            if (!orderManager.UpdateOrder(order))
             {
                 return NotFound();
             }
 
-            // This implementation will only modify the booking's state and customer.
-            // It is not safe to directly modify StartDate, EndDate and Room, because
-            // it could conflict with other active bookings.
-            modifiedOrder.Quantity = order.Quantity;
-            modifiedOrder.CustomerId = order.CustomerId;
-
-            repository.Edit(modifiedOrder);
             return NoContent();
         }
 
