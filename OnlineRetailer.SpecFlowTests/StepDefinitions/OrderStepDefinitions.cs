@@ -3,15 +3,36 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Moq;
+using OnlineRetailer.Core;
+using OnlineRetailer.Core.Entities;
 namespace OnlineRetailer.SpecFlowTests.StepDefinitions
 {
     [Binding]
     public sealed class OrderStepDefinitions
     {
 
-        // Customer customer;
-        // Order order;
+        private Mock<IRepository<Order>> mockOrderRepository;
+         Customer customer;
+         Order order;
+
+        public OrderStepDefinitions()
+        {
+            var orders = new List<Order>
+            {
+                new Order {Id = 1, ProductId = 1, Quantity = 1, OrderDate = DateTime.Now}
+            };
+            mockOrderRepository = new Mock<IRepository<Order>>();
+
+            mockOrderRepository.Setup(x => x.GetAll()).Returns(orders);
+
+                /*        public int Id { get; set; }
+        public int CustomerId { get; set; }
+        public int ProductId { get; set; }
+        public int Quantity { get; set; }
+        public DateTime OrderDate { get; set; }
+                */
+        }
 
         [Given("A user is created")]
         public void GivenUserCreated()
