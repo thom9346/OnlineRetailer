@@ -11,6 +11,6 @@ namespace OnlineRetailer.Core.Interfaces
     {
         bool CreateOrder(Order order);
         bool UpdateOrder(Order order);
-        bool CheckAvailability(int productId, int quantity);
+        bool CheckAvailability(Product product, OrderLine orderLine);
     }
 }
