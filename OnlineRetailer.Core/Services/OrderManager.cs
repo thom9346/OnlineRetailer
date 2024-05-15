@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace OnlineRetailer.Core.Services
 {
@@ -12,57 +13,69 @@ namespace OnlineRetailer.Core.Services
     {
         private readonly IRepository<Order> orderRepository;
         private readonly IRepository<Product> productRepository;
+        private readonly IRepository<Customer> customerRepository;
 
-        public OrderManager(IRepository<Order> orderRepo, IRepository<Product> productRepo)
+        public OrderManager(IRepository<Order> orderRepo, IRepository<Product> productRepo, IRepository<Customer> customerRepo)
         {
             orderRepository = orderRepo;
             productRepository = productRepo;
+            customerRepository = customerRepo;
         }
 
         public bool CreateOrder(Order order)
         {
-            var product = productRepository.Get(order.ProductId);
-            //if product doesnt exist or not enough stoc´k
-            if (product == null || product.ItemsInStock < order.Quantity)
+            using (var transaction = new TransactionScope())
             {
+                Customer customer = customerRepository.Get(order.CustomerId);
+
+                decimal totalCost = 0;
+
+                foreach (var orderLine in order.OrderLines)
+                {
+                    Product product = productRepository.Get(orderLine.ProductId);
+
+
+                    if (CheckAvailability(product, orderLine))
+                    {
+                        totalCost += orderLine.Quantity * product.Price;
+                        product.ItemsInStock -= orderLine.Quantity;
+                        productRepository.Edit(product);
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                     
+                } 
+
+                if (customer.Balance >= totalCost)
+                {
+                    orderRepository.Add(order);
+                    transaction.Complete();
+                    return true;
+                } 
                 return false;
             }
-
-            product.ItemsInStock -= order.Quantity;
-            productRepository.Edit(product);
-
-            orderRepository.Add(order);
-            return true;
         }
 
         public bool UpdateOrder(Order order)
         {
-            var existingOrder = orderRepository.Get(order.Id);
-            if (existingOrder == null)
-            {
-                return false;
-            }
-
-            existingOrder.Quantity = order.Quantity;
-            existingOrder.CustomerId = order.CustomerId;
-            existingOrder.ProductId = order.ProductId;
-
-            existingOrder.OrderDate = order.OrderDate;
-
-            orderRepository.Edit(existingOrder);
-            return true;
+            return false;
         }
 
-        public bool CheckAvailability(int productId, int quantity)
+
+        public bool CheckAvailability(Product product, OrderLine orderLine)
         {
-            var product = productRepository.Get(productId);
-            if (product == null || product.ItemsInStock < quantity)
+            
+
+            if (product == null || product.ItemsInStock < orderLine.Quantity)
             {
                 return false;
             }
-
             return true;
         }
+ 
+ 
     }
 }
 

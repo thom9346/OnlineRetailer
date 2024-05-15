@@ -28,8 +28,8 @@ namespace OnlineRetailer.Infrastructure
 
             List<Customer> customers = new List<Customer>
             {
-                new Customer { Name="John Smith", Email="js@gmail.com" },
-                new Customer { Name="Jane Doe", Email="jd@gmail.com" }
+                new Customer { Name="John Smith", Email="js@gmail.com", Balance = 5 },
+                new Customer { Name="Jane Doe", Email="jd@gmail.com", Balance = 500 }
             };
 
             List<Product> rooms = new List<Product>
@@ -40,12 +40,17 @@ namespace OnlineRetailer.Infrastructure
             };
 
             DateTime date = DateTime.Today;
+            List<OrderLine> OrderLines = new List<OrderLine>
+            {
+              new OrderLine {ProductId = 1, Quantity = 1 }   ,
+              new OrderLine {ProductId = 2, Quantity = 1 }   ,
+            };
+
             List<Order> orders = new List<Order>
             {
-                new Order { CustomerId = 1, ProductId = 1, Quantity = 2, OrderDate = date },
-                new Order { CustomerId = 1, ProductId = 2, Quantity = 5, OrderDate = date },
-                new Order { CustomerId = 2, ProductId = 1, Quantity = 4, OrderDate = date }
+                new Order { CustomerId = 1, OrderLines = OrderLines , OrderDate = date } 
             };
+             
 
             context.Customer.AddRange(customers);
             context.Product.AddRange(rooms);
