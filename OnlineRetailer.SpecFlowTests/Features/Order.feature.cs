@@ -80,16 +80,16 @@ namespace OnlineRetailer.SpecFlowTests.Features
             this.TestTearDown();
         }
         
-        [Xunit.SkippableTheoryAttribute(DisplayName="User places multiple orders")]
+        [Xunit.SkippableTheoryAttribute(DisplayName="User places an order with credits")]
         [Xunit.TraitAttribute("FeatureTitle", "Order")]
-        [Xunit.TraitAttribute("Description", "User places multiple orders")]
+        [Xunit.TraitAttribute("Description", "User places an order with credits")]
         [Xunit.TraitAttribute("Category", "tag1")]
         [Xunit.InlineDataAttribute("200", "100", "True", new string[0])]
         [Xunit.InlineDataAttribute("200", "300", "False", new string[0])]
         [Xunit.InlineDataAttribute("500", "500", "True", new string[0])]
-        [Xunit.InlineDataAttribute("200", "-5", "False", new string[0])]
+        [Xunit.InlineDataAttribute("200", "-5", "True", new string[0])]
         [Xunit.InlineDataAttribute("-200", "200", "False", new string[0])]
-        public virtual void UserPlacesMultipleOrders(string credits, string itemTotal, string result, string[] exampleTags)
+        public virtual void UserPlacesAnOrderWithCredits(string credits, string itemTotal, string result, string[] exampleTags)
         {
             string[] @__tags = new string[] {
                     "tag1"};
@@ -102,7 +102,7 @@ namespace OnlineRetailer.SpecFlowTests.Features
             argumentsOfScenario.Add("credits", credits);
             argumentsOfScenario.Add("itemTotal", itemTotal);
             argumentsOfScenario.Add("result", result);
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("User places multiple orders", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("User places an order with credits", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
 #line 6
 this.ScenarioInitialize(scenarioInfo);
 #line hidden

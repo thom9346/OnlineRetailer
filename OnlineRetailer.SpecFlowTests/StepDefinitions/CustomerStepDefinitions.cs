@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Castle.Core.Resource;
+using Moq;
+using OnlineRetailer.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,22 +13,43 @@ namespace OnlineRetailer.SpecFlowTests.StepDefinitions
     public sealed class CustomerStepDefinitions
     {
 
+        private Mock<IRepository<Customer>> mockCustomerRepository;
+
+        List<Customer> customers;
+
+        List<Customer> result;
+
+        public CustomerStepDefinitions() {
+
+
+ 
+        }
+
         [Given(@"A repository for customers is created")]
         public void GivenARepositoryForCustomersIsCreated()
         {
-            throw new PendingStepException();
+            customers = new List<Customer>
+            {
+                new Customer {Balance = 200, Email = "LarsLarsen@gmail.com",Id = 1, Name = "Lars"}
+            };
+
+            mockCustomerRepository = new Mock<IRepository<Customer>>();
+
+            mockCustomerRepository.Setup(x => x.GetAll()).Returns(customers);
         }
 
         [When(@"A new customer is created")]
         public void WhenANewCustomerIsCreated()
         {
-            throw new PendingStepException();
+            customers.Add(new Customer { Balance = 200, Email = "LarsLarsen@gmail.com", Id = 1, Name = "Lars" });
+            mockCustomerRepository.Object.Add(customers[1]);
+            result = (List<Customer>)mockCustomerRepository.Object.GetAll();
         }
 
         [Then(@"The customer is inserted into the repository")]
         public void ThenTheCustomerIsInsertedIntoTheRepository()
         {
-            throw new PendingStepException();
+            Assert.Equal(result[1], customers[1]); 
         }
 
 

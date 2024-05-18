@@ -6,67 +6,94 @@ using System.Threading.Tasks;
 using Moq;
 using OnlineRetailer.Core;
 using OnlineRetailer.Core.Entities;
+using OnlineRetailer.Core.Interfaces;
+using OnlineRetailer.Core.Services;
 namespace OnlineRetailer.SpecFlowTests.StepDefinitions
 {
     [Binding]
     public sealed class OrderStepDefinitions
     {
-
+        private Mock<IRepository<Customer>> mockCustomerRepository;
         private Mock<IRepository<Order>> mockOrderRepository;
-         Customer customer;
-         Order order;
+        private Mock<IRepository<Product>> mockProductRepository;
 
+         Order order = new Order();
+
+        private IOrderManager orderManager;
         public OrderStepDefinitions()
         {
+            var orderlines = new List<OrderLine>
+            {
+                new OrderLine{Id = 1, ProductId = 1, Quantity = 1 }
+            };
             var orders = new List<Order>
             {
-                new Order {Id = 1, ProductId = 1, Quantity = 1, OrderDate = DateTime.Now}
+                new Order {Id = 1, CustomerId = 1, OrderDate = DateTime.Now, OrderLines = orderlines}
+            };
+
+            var customers = new List<Customer>
+            {
+                new Customer {Balance = 200, Email = "LarsLarsen@gmail.com",Id = 1, Name = "Lars"}
+            };
+
+            var products = new List<Product>
+            {
+                new Product { Id = 1, ItemsInStock = 5, Name = "Big Hammer",Price = 50}
             };
             mockOrderRepository = new Mock<IRepository<Order>>();
+            mockCustomerRepository = new Mock<IRepository<Customer>>();
+            mockProductRepository = new Mock<IRepository<Product>>();
 
             mockOrderRepository.Setup(x => x.GetAll()).Returns(orders);
+            mockCustomerRepository.Setup(x => x.GetAll()).Returns(customers);
+            mockProductRepository.Setup(x => x.GetAll()).Returns(products);
 
-                /*        public int Id { get; set; }
-        public int CustomerId { get; set; }
-        public int ProductId { get; set; }
-        public int Quantity { get; set; }
-        public DateTime OrderDate { get; set; }
-                */
+            orderManager = new OrderManager(mockOrderRepository.Object, mockProductRepository.Object, mockCustomerRepository.Object);
         }
 
+        Customer customer = new Customer();
+        Order myOrder;
+        bool finalResult;
         [Given("A user is created")]
         public void GivenUserCreated()
         {
-            //customer = customerRepository.CreateCustomer()
-            throw new PendingStepException();
+            customer = new Customer { Balance = 200, Email = "pl", Id = 2, Name = "p" };
         }
 
         [Given(@"the user has (.*) credits")]
         public void GivenTheUserHasCredits(int p0)
         {
-            //customer.Credits = p0;
-            throw new PendingStepException();
+
+            customer.Balance = p0;
         }
 
         [Given(@"the items total out to (.*)")]
         public void GivenTheItemsTotalOutTo(int p0)
         {
-            //order.price = p0;
-            throw new PendingStepException();
+
+            Product product = new Product { Id = 1, ItemsInStock = 5, Name = "Big Hammer", Price = p0 };
+            List<OrderLine> orderline = new List<OrderLine> {
+                new OrderLine { Id = 1, ProductId = 1, Quantity = 1 }
+            };
+
+            myOrder = new Order { Id = 1, CustomerId = customer.Id, OrderDate = DateTime.Now, OrderLines = orderline };
+
+
+
+            myOrder.totalPrice = p0;
         }
 
         [When(@"the order is placed")]
         public void WhenTheOrderIsPlaced()
         {
-            // order.CheckOrder();
-            throw new PendingStepException();
+            finalResult = customer.Balance >= myOrder.totalPrice;
+            //should be calling the createorder func in booking manager probably
         }
 
         [Then(@"the result is (.*)")]
         public void ThenTheResultIs(bool result)
         {
-            // Assert.Equal(order.status, result)
-            throw new PendingStepException();
+            Assert.Equal(result, finalResult);
         }
 
 

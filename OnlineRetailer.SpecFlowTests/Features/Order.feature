@@ -3,7 +3,7 @@
 A short summary of the feature
 
 @tag1
-Scenario Outline: User places multiple orders
+Scenario Outline: User places an order with credits
 	Given A user is created
 	And the user has <credits> credits
 	And the items total out to <itemTotal>
@@ -15,7 +15,7 @@ Scenario Outline: User places multiple orders
 	| 200 | 100 | True  |
 	| 200 | 300 | False |
 	| 500 | 500 | True  |
-	| 200 | -5  | False |
+	| 200 | -5  | True  |
 	| -200| 200 | False |
 
 

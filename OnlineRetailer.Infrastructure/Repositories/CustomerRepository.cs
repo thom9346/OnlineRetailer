@@ -17,7 +17,8 @@ namespace OnlineRetailer.Infrastructure.Repositories
 
         public void Add(Customer entity)
         {
-            throw new NotImplementedException();
+            db.Customer.Add(entity);
+            db.SaveChanges();
         }
 
         public void Edit(Customer entity)

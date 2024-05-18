@@ -84,11 +84,11 @@ namespace OnlineRetailer.SpecFlowTests.Features
         [Xunit.TraitAttribute("FeatureTitle", "Product")]
         [Xunit.TraitAttribute("Description", "Check availability of product")]
         [Xunit.TraitAttribute("Category", "tag1")]
-        [Xunit.InlineDataAttribute("3", "true", new string[0])]
-        [Xunit.InlineDataAttribute("0", "false", new string[0])]
-        [Xunit.InlineDataAttribute("-1", "false", new string[0])]
-        [Xunit.InlineDataAttribute("100", "true", new string[0])]
-        public virtual void CheckAvailabilityOfProduct(string quantity, string result, string[] exampleTags)
+        [Xunit.InlineDataAttribute("3", "2", "true", new string[0])]
+        [Xunit.InlineDataAttribute("0", "5", "false", new string[0])]
+        [Xunit.InlineDataAttribute("-1", "1", "false", new string[0])]
+        [Xunit.InlineDataAttribute("100", "100", "true", new string[0])]
+        public virtual void CheckAvailabilityOfProduct(string availableQuantity, string requiredQuantity, string result, string[] exampleTags)
         {
             string[] @__tags = new string[] {
                     "tag1"};
@@ -98,7 +98,8 @@ namespace OnlineRetailer.SpecFlowTests.Features
             }
             string[] tagsOfScenario = @__tags;
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            argumentsOfScenario.Add("quantity", quantity);
+            argumentsOfScenario.Add("AvailableQuantity", availableQuantity);
+            argumentsOfScenario.Add("RequiredQuantity", requiredQuantity);
             argumentsOfScenario.Add("result", result);
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Check availability of product", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
 #line 6
@@ -125,12 +126,15 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.Given("A product is created", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 8
- testRunner.And(string.Format("There are {0} items available", quantity), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And(string.Format("There are {0} items available", availableQuantity), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 9
- testRunner.When("the status is checked", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.And(string.Format("The customer wants {0} items", requiredQuantity), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 10
+ testRunner.When("the status is checked", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 11
  testRunner.Then(string.Format("the availability is {0}", result), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }

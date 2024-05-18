@@ -46,7 +46,7 @@ namespace OnlineRetailer.Core.Services
                         return false;
                     }
                      
-                } 
+                }
 
                 if (customer.Balance >= totalCost)
                 {
@@ -73,6 +73,11 @@ namespace OnlineRetailer.Core.Services
                 return false;
             }
             return true;
+        }
+
+        public Customer getCustomerById(int id)
+        {
+            return customerRepository.Get(id);
         }
  
  
