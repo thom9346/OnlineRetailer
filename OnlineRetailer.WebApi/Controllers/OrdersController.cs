@@ -40,7 +40,7 @@ namespace OnlineRetailer.WebApi.Controllers
             return new ObjectResult(item);
         }
 
-        // POST bookings
+        // POST orders
         [HttpPost]
         public IActionResult Post([FromBody] Order order)
         {
@@ -50,14 +50,13 @@ namespace OnlineRetailer.WebApi.Controllers
             }
             if (!orderManager.CreateOrder(order))
             {
-                return BadRequest("Order creation failed due to insufficient stock or other reasons.");
+                return BadRequest("Order creation failed.");
             }
 
             return CreatedAtRoute("GetOrder", new { id = order.Id }, order);
         }
 
-        // PUT bookings/5
-        //to change quantity for now
+        // PUT orders/5
         [HttpPut("{id}")]
         public IActionResult Put(int id, [FromBody] Order order)
         {
@@ -74,7 +73,7 @@ namespace OnlineRetailer.WebApi.Controllers
             return NoContent();
         }
 
-        // DELETE bookings/5
+        // DELETE orders/5
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {

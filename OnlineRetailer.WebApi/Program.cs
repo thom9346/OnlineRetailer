@@ -19,6 +19,7 @@ namespace OnlineRetailer.WebApi
             builder.Services.AddDbContext<OnlineRetailerContext>(opt =>
                 opt.UseInMemoryDatabase("OnlineRetailerDb"));
 
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<IRepository<Product>, ProductRepository>();
             builder.Services.AddScoped<IRepository<Customer>, CustomerRepository>();
             builder.Services.AddScoped<IRepository<Order>, OrderRepository>();

@@ -17,7 +17,9 @@ namespace OnlineRetailer.SpecFlowTests.StepDefinitions
         private Mock<IRepository<Order>> mockOrderRepository;
         private Mock<IRepository<Product>> mockProductRepository;
 
-         Order order = new Order();
+        private readonly Mock<IUnitOfWork> mockUnitOfWork;
+
+        Order order = new Order();
 
         private IOrderManager orderManager;
         public OrderStepDefinitions()
@@ -40,6 +42,8 @@ namespace OnlineRetailer.SpecFlowTests.StepDefinitions
             {
                 new Product { Id = 1, ItemsInStock = 5, Name = "Big Hammer",Price = 50}
             };
+            mockUnitOfWork = new Mock<IUnitOfWork>();
+
             mockOrderRepository = new Mock<IRepository<Order>>();
             mockCustomerRepository = new Mock<IRepository<Customer>>();
             mockProductRepository = new Mock<IRepository<Product>>();
@@ -48,7 +52,7 @@ namespace OnlineRetailer.SpecFlowTests.StepDefinitions
             mockCustomerRepository.Setup(x => x.GetAll()).Returns(customers);
             mockProductRepository.Setup(x => x.GetAll()).Returns(products);
 
-            orderManager = new OrderManager(mockOrderRepository.Object, mockProductRepository.Object, mockCustomerRepository.Object);
+            orderManager = new OrderManager(mockUnitOfWork.Object);
         }
 
         Customer customer = new Customer();
@@ -80,13 +84,13 @@ namespace OnlineRetailer.SpecFlowTests.StepDefinitions
 
 
 
-            myOrder.totalPrice = p0;
+            myOrder.TotalPrice = p0;
         }
 
         [When(@"the order is placed")]
         public void WhenTheOrderIsPlaced()
         {
-            finalResult = customer.Balance >= myOrder.totalPrice;
+            finalResult = customer.Balance >= myOrder.TotalPrice;
             //should be calling the createorder func in booking manager probably
         }
 

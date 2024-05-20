@@ -1,86 +1,98 @@
 ﻿using OnlineRetailer.Core.Entities;
 using OnlineRetailer.Core.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Transactions;
 
 namespace OnlineRetailer.Core.Services
 {
     public class OrderManager : IOrderManager
     {
-        private readonly IRepository<Order> orderRepository;
-        private readonly IRepository<Product> productRepository;
-        private readonly IRepository<Customer> customerRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public OrderManager(IRepository<Order> orderRepo, IRepository<Product> productRepo, IRepository<Customer> customerRepo)
+        public OrderManager(IUnitOfWork unitOfWork)
         {
-            orderRepository = orderRepo;
-            productRepository = productRepo;
-            customerRepository = customerRepo;
+            _unitOfWork = unitOfWork;
         }
 
         public bool CreateOrder(Order order)
         {
-            using (var transaction = new TransactionScope())
+            if (order == null) throw new ArgumentNullException(nameof(order));
+            if (order.OrderLines == null || !order.OrderLines.Any()) throw new ArgumentException("Order must have at least one order line.", nameof(order.OrderLines));
+
+            try
             {
-                Customer customer = customerRepository.Get(order.CustomerId);
+                Customer customer = _unitOfWork.Customers.Get(order.CustomerId) ?? throw new InvalidOperationException("Customer not found");
 
-                decimal totalCost = 0;
+                decimal totalCost = CalculateTotalCost(order);
 
-                foreach (var orderLine in order.OrderLines)
+                if (customer.Balance < totalCost)
                 {
-                    Product product = productRepository.Get(orderLine.ProductId);
-
-
-                    if (CheckAvailability(product, orderLine))
-                    {
-                        totalCost += orderLine.Quantity * product.Price;
-                        product.ItemsInStock -= orderLine.Quantity;
-                        productRepository.Edit(product);
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                     
+                    return false;
                 }
 
-                if (customer.Balance >= totalCost)
-                {
-                    orderRepository.Add(order);
-                    transaction.Complete();
-                    return true;
-                } 
+                UpdateProductStocks(order);
+
+                customer.Balance -= totalCost;
+                _unitOfWork.Customers.Edit(customer);
+
+                order.TotalPrice = totalCost;
+                _unitOfWork.Orders.Add(order);
+
+                _unitOfWork.Commit();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _unitOfWork.Rollback();
                 return false;
             }
+            
         }
 
+        //this isnt implemented yet. Could do next ig
         public bool UpdateOrder(Order order)
         {
+            if (order == null) throw new ArgumentNullException(nameof(order));
+
             return false;
         }
 
-
         public bool CheckAvailability(Product product, OrderLine orderLine)
         {
-            
+            if (product == null) throw new ArgumentNullException(nameof(product));
+            if (orderLine == null) throw new ArgumentNullException(nameof(orderLine));
 
-            if (product == null || product.ItemsInStock < orderLine.Quantity)
-            {
-                return false;
-            }
-            return true;
+            return product.ItemsInStock >= orderLine.Quantity;
         }
-
-        public Customer getCustomerById(int id)
+        private decimal CalculateTotalCost(Order order)
         {
-            return customerRepository.Get(id);
+            decimal totalCost = 0;
+
+            foreach (var orderLine in order.OrderLines)
+            {
+                Product product = _unitOfWork.Products.Get(orderLine.ProductId) ?? throw new InvalidOperationException("Product not found");
+
+                if (!CheckAvailability(product, orderLine))
+                {
+                    throw new InvalidOperationException($"Product {product.Id} is out of stock.");
+                }
+
+                totalCost += orderLine.Quantity * product.Price;
+            }
+
+            return totalCost;
         }
- 
- 
+
+        private void UpdateProductStocks(Order order)
+        {
+            foreach (var orderLine in order.OrderLines)
+            {
+                Product product = _unitOfWork.Products.Get(orderLine.ProductId);
+                product.ItemsInStock -= orderLine.Quantity;
+                _unitOfWork.Products.Edit(product);
+            }
+        }
+
+
     }
 }
 

@@ -12,6 +12,6 @@ namespace OnlineRetailer.Core.Entities
         public int CustomerId { get; set; }
         public DateTime OrderDate { get; set; }
         public List<OrderLine> OrderLines { get; set; } = new List<OrderLine>();
-        public int totalPrice { get; set; }
+        public decimal TotalPrice { get; set; }
     }
 }

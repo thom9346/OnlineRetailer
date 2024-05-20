@@ -20,13 +20,11 @@ namespace OnlineRetailer.Infrastructure.Repositories
         public void Add(Order entity)
         {
             db.Order.Add(entity);
-            db.SaveChanges();
         }
 
         public void Edit(Order entity)
         {
             db.Entry(entity).State = EntityState.Modified;
-            db.SaveChanges();
         }
 
         public Order Get(int id)
@@ -41,11 +39,10 @@ namespace OnlineRetailer.Infrastructure.Repositories
 
         public void Remove(int id)
         {
-            var entity = db.Order.Find(id);
+            var entity = db.Customer.Find(id);
             if (entity != null)
             {
-                db.Order.Remove(entity);
-                db.SaveChanges();
+                db.Customer.Remove(entity);
             }
         }
     }

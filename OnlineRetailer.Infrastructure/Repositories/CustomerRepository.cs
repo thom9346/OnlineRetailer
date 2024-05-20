@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using OnlineRetailer.Core;
 using OnlineRetailer.Infrastructure;
 
@@ -18,12 +19,11 @@ namespace OnlineRetailer.Infrastructure.Repositories
         public void Add(Customer entity)
         {
             db.Customer.Add(entity);
-            db.SaveChanges();
         }
 
         public void Edit(Customer entity)
         {
-            throw new NotImplementedException();
+            db.Entry(entity).State = EntityState.Modified;
         }
 
         public Customer Get(int id)

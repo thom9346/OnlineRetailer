@@ -20,8 +20,10 @@ namespace OnlineRetailer.SpecFlowTests.StepDefinitions
         private Mock<IRepository<Customer>> mockCustomerRepository;
         private Mock<IRepository<Order>> mockOrderRepository;
         private Mock<IRepository<Product>> mockProductRepository;
+        private readonly Mock<IUnitOfWork> mockUnitOfWork;
 
         private IOrderManager orderManager;
+
 
         List<Product> TestProducts;
         List<OrderLine> TestOrderlines;
@@ -50,12 +52,13 @@ namespace OnlineRetailer.SpecFlowTests.StepDefinitions
             mockOrderRepository = new Mock<IRepository<Order>>();
             mockCustomerRepository = new Mock<IRepository<Customer>>();
             mockProductRepository = new Mock<IRepository<Product>>();
+            mockUnitOfWork = new Mock<IUnitOfWork>();
 
             mockOrderRepository.Setup(x => x.GetAll()).Returns(orders);
             mockCustomerRepository.Setup(x => x.GetAll()).Returns(customers);
             mockProductRepository.Setup(x => x.GetAll()).Returns(products);
 
-            orderManager = new OrderManager(mockOrderRepository.Object, mockProductRepository.Object, mockCustomerRepository.Object);
+            orderManager = new OrderManager(mockUnitOfWork.Object);
         }
         [Given(@"A product is created")]
         public void GivenAProductIsCreated()
