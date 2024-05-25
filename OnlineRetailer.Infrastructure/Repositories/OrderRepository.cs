@@ -29,12 +29,12 @@ namespace OnlineRetailer.Infrastructure.Repositories
 
         public Order Get(int id)
         {
-            return db.Order.Find(id);
+            return db.Order.Include(o => o.OrderLines).SingleOrDefault(o => o.Id == id);
         }
 
         public IEnumerable<Order> GetAll()
         {
-            return db.Order.ToList();
+            return db.Order.Include(o => o.OrderLines).ToList();
         }
 
         public void Remove(int id)
