@@ -15,8 +15,11 @@ namespace OnlineRetailer.Core.Services
 
         public bool CreateOrder(Order order)
         {
-            if (order == null) throw new ArgumentNullException(nameof(order));
-            if (order.OrderLines == null || !order.OrderLines.Any()) throw new ArgumentException("Order must have at least one order line.", nameof(order.OrderLines));
+            if (order == null)
+                throw new ArgumentNullException(nameof(order));
+
+            if (order.OrderLines == null || !order.OrderLines.Any())
+                throw new ArgumentException("Order must have at least one order line.", nameof(order.OrderLines));
 
             try
             {
@@ -63,13 +66,14 @@ namespace OnlineRetailer.Core.Services
 
             return product.ItemsInStock >= orderLine.Quantity;
         }
-        private decimal CalculateTotalCost(Order order)
+        public decimal CalculateTotalCost(Order order)
         {
             decimal totalCost = 0;
 
             foreach (var orderLine in order.OrderLines)
             {
-                Product product = _unitOfWork.Products.Get(orderLine.ProductId) ?? throw new InvalidOperationException("Product not found");
+                Product product = _unitOfWork.Products.Get(orderLine.ProductId) 
+                    ?? throw new InvalidOperationException("Product not found");
 
                 if (!CheckAvailability(product, orderLine))
                 {
@@ -82,7 +86,7 @@ namespace OnlineRetailer.Core.Services
             return totalCost;
         }
 
-        private void UpdateProductStocks(Order order)
+        public void UpdateProductStocks(Order order)
         {
             foreach (var orderLine in order.OrderLines)
             {
