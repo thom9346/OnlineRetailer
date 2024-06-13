@@ -160,6 +160,7 @@ namespace OnlineRetailer.IntegrationTests
          * Tilstrækkelig på lager: max
          * Tilstrækkelig på saldo: max
          * (Note der er ingen max balance lige nu... Kan eventuelt implementere det alt efter hvad i synes)
+         *  Måske burde tilstrækkelig på saldo være en "don't care" => Tilstrækkelig på saldo: - 
          */
         [TestMethod]
         public void Test_CreateOrder_MaxBoundaryValues()
