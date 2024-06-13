@@ -21,7 +21,7 @@ namespace OnlineRetailer.Infrastructure
             context.Database.EnsureCreated();
 
             // Look for any bookings.
-            if (context.Product.Any())
+            if (context.Products.Any())
             {
                 return;   // DB has been seeded
             }
@@ -52,10 +52,10 @@ namespace OnlineRetailer.Infrastructure
             };
              
 
-            context.Customer.AddRange(customers);
-            context.Product.AddRange(rooms);
+            context.Customers.AddRange(customers);
+            context.Products.AddRange(rooms);
             context.SaveChanges();
-            context.Order.AddRange(orders);
+            context.Orders.AddRange(orders);
             context.SaveChanges();
         }
     }

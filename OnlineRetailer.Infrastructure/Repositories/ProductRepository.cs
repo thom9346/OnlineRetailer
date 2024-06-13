@@ -29,12 +29,12 @@ namespace OnlineRetailer.Infrastructure.Repositories
 
         public Product Get(int id)
         {
-            return db.Product.Find(id);
+            return db.Products.Find(id);
         }
 
         public IEnumerable<Product> GetAll()
         {
-            return db.Product.ToList();
+            return db.Products.ToList();
         }
 
         public void Remove(int id)

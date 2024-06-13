@@ -21,6 +21,9 @@ namespace OnlineRetailer.Core.Services
             if (order.OrderLines == null || !order.OrderLines.Any())
                 throw new ArgumentException("Order must have at least one order line.", nameof(order.OrderLines));
 
+            if (order.OrderLines.Any(ol => ol.Quantity <= 0))
+                throw new ArgumentException("Order line must have a quantity greater than 0.", nameof(order.OrderLines));
+
             try
             {
                 Customer customer = _unitOfWork.Customers.Get(order.CustomerId) ?? throw new InvalidOperationException("Customer not found");

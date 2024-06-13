@@ -19,7 +19,7 @@ namespace OnlineRetailer.Infrastructure.Repositories
 
         public void Add(Order entity)
         {
-            db.Order.Add(entity);
+            db.Orders.Add(entity);
         }
 
         public void Edit(Order entity)
@@ -29,20 +29,20 @@ namespace OnlineRetailer.Infrastructure.Repositories
 
         public Order Get(int id)
         {
-            return db.Order.Include(o => o.OrderLines).SingleOrDefault(o => o.Id == id);
+            return db.Orders.Include(o => o.OrderLines).SingleOrDefault(o => o.Id == id);
         }
 
         public IEnumerable<Order> GetAll()
         {
-            return db.Order.Include(o => o.OrderLines).ToList();
+            return db.Orders.Include(o => o.OrderLines).ToList();
         }
 
         public void Remove(int id)
         {
-            var entity = db.Customer.Find(id);
+            var entity = db.Customers.Find(id);
             if (entity != null)
             {
-                db.Customer.Remove(entity);
+                db.Customers.Remove(entity);
             }
         }
     }

@@ -18,7 +18,7 @@ namespace OnlineRetailer.Infrastructure.Repositories
 
         public void Add(Customer entity)
         {
-            db.Customer.Add(entity);
+            db.Customers.Add(entity);
         }
 
         public void Edit(Customer entity)
@@ -28,13 +28,13 @@ namespace OnlineRetailer.Infrastructure.Repositories
 
         public Customer Get(int id)
         {
-            return db.Customer.Find(id);
+            return db.Customers.Find(id);
 
         }
 
         public IEnumerable<Customer> GetAll()
         {
-            return db.Customer.ToList();
+            return db.Customers.ToList();
         }
 
         public void Remove(int id)
