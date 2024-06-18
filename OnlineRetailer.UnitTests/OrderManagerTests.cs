@@ -68,6 +68,66 @@ namespace OnlineRetailer.UnitTests
         }
 
         [Fact]
+        public void CalculateTotalCost_ProductInStock_ReturnsTotalCost()
+        {
+            var order = new Order
+            {
+                OrderLines = new List<OrderLine> { new OrderLine { ProductId = 1, Quantity = 2 } }
+            };
+
+            var totalCost = _orderManager.CalculateTotalCost(order);
+
+            Assert.Equal(200, totalCost);
+        }
+        [Fact]
+        public void CalculateTotalCost_ProductDoesNotExist_ThrowsException()
+        {
+            var order = new Order
+            {
+                OrderLines = new List<OrderLine> { new OrderLine { ProductId = 999, Quantity = 1 } }
+            };
+
+            Assert.Throws<InvalidOperationException>(() => _orderManager.CalculateTotalCost(order));
+        }
+        [Fact]
+        public void CalculateTotalCost_ProductOutOfStock_ThrowsException()
+        {
+            var order = new Order
+            {
+                OrderLines = new List<OrderLine> { new OrderLine { ProductId = 2, Quantity = 100 } }
+            };
+
+            Assert.Throws<InvalidOperationException>(() => _orderManager.CalculateTotalCost(order));
+        }
+        [Fact]
+        public void CalculateTotalCost_EmptyOrder_ReturnsZero()
+        {
+            var order = new Order
+            {
+                OrderLines = new List<OrderLine>()
+            };
+
+            var totalCost = _orderManager.CalculateTotalCost(order);
+
+            Assert.Equal(0, totalCost);
+        }
+        [Fact]
+        public void CalculateTotalCost_MultipleProductsInStock_ReturnsTotalCost()
+        {
+            var order = new Order
+            {
+                OrderLines = new List<OrderLine>
+                {
+                    new OrderLine { ProductId = 1, Quantity = 5 },
+                    new OrderLine { ProductId = 2, Quantity = 2 }
+                }
+            };
+            var totalCost = _orderManager.CalculateTotalCost(order);
+
+            Assert.Equal(900, totalCost);
+        }
+
+        [Fact]
         public void CreateOrder_ProductDoesNotExist_ReturnsFalse()
         {
             var order = new Order
@@ -170,74 +230,5 @@ namespace OnlineRetailer.UnitTests
 
             Assert.True(result);
         }
-        [Fact]
-        public void CalculateTotalCost_ProductInStock_ReturnsTotalCost()
-        {
-            var order = new Order
-            {
-                OrderLines = new List<OrderLine> { new OrderLine { ProductId = 1, Quantity = 2 } }
-            };
-
-            
-            var orderManager = new OrderManager(_mockUnitOfWork.Object);
-            var totalCost = orderManager.CalculateTotalCost(order);
-
-            Assert.Equal(200, totalCost);
-        }
-        [Fact]
-        public void CalculateTotalCost_ProductDoesNotExist_ThrowsException()
-        {
-            var order = new Order
-            {
-                OrderLines = new List<OrderLine> { new OrderLine { ProductId = 999, Quantity = 1 } }
-            };
-
-            var orderManager = new OrderManager(_mockUnitOfWork.Object);
-
-            Assert.Throws<InvalidOperationException>(() => orderManager.CalculateTotalCost(order));
-        }
-        [Fact]
-        public void CalculateTotalCost_ProductOutOfStock_ThrowsException()
-        {
-            var order = new Order
-            {
-                OrderLines = new List<OrderLine> { new OrderLine { ProductId = 2, Quantity = 100 } }
-            };
-
-            var orderManager = new OrderManager(_mockUnitOfWork.Object);
-
-            Assert.Throws<InvalidOperationException>(() => orderManager.CalculateTotalCost(order));
-        }
-        [Fact]
-        public void CalculateTotalCost_EmptyOrder_ReturnsZero()
-        {
-            var order = new Order
-            {
-                OrderLines = new List<OrderLine>()
-            };
-
-            var orderManager = new OrderManager(_mockUnitOfWork.Object);
-            var totalCost = orderManager.CalculateTotalCost(order);
-
-            Assert.Equal(0, totalCost);
-        }
-        [Fact]
-        public void CalculateTotalCost_MultipleProductsInStock_ReturnsTotalCost()
-        {
-            var order = new Order
-            {
-                OrderLines = new List<OrderLine>
-                {
-                    new OrderLine { ProductId = 1, Quantity = 5 },
-                    new OrderLine { ProductId = 2, Quantity = 2 }
-                }
-            };
-
-            var orderManager = new OrderManager(_mockUnitOfWork.Object);
-            var totalCost = orderManager.CalculateTotalCost(order);
-
-            Assert.Equal(900, totalCost);
-        }
-
     }
 }
