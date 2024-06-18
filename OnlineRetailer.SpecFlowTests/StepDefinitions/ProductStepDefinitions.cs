@@ -60,8 +60,9 @@ namespace OnlineRetailer.SpecFlowTests.StepDefinitions
 
             orderManager = new OrderManager(mockUnitOfWork.Object);
         }
-        [Given(@"A product is created")]
-        public void GivenAProductIsCreated()
+
+        [Given(@"A product exists")]
+        public void GivenAProductExists()
         {
             TestProducts = new List<Product>
             {

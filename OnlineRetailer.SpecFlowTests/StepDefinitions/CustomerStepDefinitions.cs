@@ -30,7 +30,7 @@ namespace OnlineRetailer.SpecFlowTests.StepDefinitions
         {
             customers = new List<Customer>
             {
-                new Customer {Balance = 200, Email = "LarsLarsen@gmail.com",Id = 1, Name = "Lars"}
+                new Customer {Balance = 500, Email = "Emil@gmail.com",Id = 1, Name = "Emil"}
             };
 
             mockCustomerRepository = new Mock<IRepository<Customer>>();
@@ -41,7 +41,7 @@ namespace OnlineRetailer.SpecFlowTests.StepDefinitions
         [When(@"A new customer is created")]
         public void WhenANewCustomerIsCreated()
         {
-            customers.Add(new Customer { Balance = 200, Email = "LarsLarsen@gmail.com", Id = 1, Name = "Lars" });
+            customers.Add(new Customer { Balance = 200, Email = "LarsLarsen@gmail.com", Id = 2, Name = "Lars" });
             mockCustomerRepository.Object.Add(customers[1]);
             result = (List<Customer>)mockCustomerRepository.Object.GetAll();
         }

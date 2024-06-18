@@ -80,15 +80,15 @@ namespace OnlineRetailer.SpecFlowTests.Features
             this.TestTearDown();
         }
         
-        [Xunit.SkippableTheoryAttribute(DisplayName="Check availability of product")]
+        [Xunit.SkippableTheoryAttribute(DisplayName="Customer orders a specified quantity of items")]
         [Xunit.TraitAttribute("FeatureTitle", "Product")]
-        [Xunit.TraitAttribute("Description", "Check availability of product")]
+        [Xunit.TraitAttribute("Description", "Customer orders a specified quantity of items")]
         [Xunit.TraitAttribute("Category", "tag1")]
         [Xunit.InlineDataAttribute("3", "2", "true", new string[0])]
         [Xunit.InlineDataAttribute("0", "5", "false", new string[0])]
         [Xunit.InlineDataAttribute("-1", "1", "false", new string[0])]
         [Xunit.InlineDataAttribute("100", "100", "true", new string[0])]
-        public virtual void CheckAvailabilityOfProduct(string availableQuantity, string requiredQuantity, string result, string[] exampleTags)
+        public virtual void CustomerOrdersASpecifiedQuantityOfItems(string availableQuantity, string requiredQuantity, string result, string[] exampleTags)
         {
             string[] @__tags = new string[] {
                     "tag1"};
@@ -101,7 +101,7 @@ namespace OnlineRetailer.SpecFlowTests.Features
             argumentsOfScenario.Add("AvailableQuantity", availableQuantity);
             argumentsOfScenario.Add("RequiredQuantity", requiredQuantity);
             argumentsOfScenario.Add("result", result);
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Check availability of product", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Customer orders a specified quantity of items", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
 #line 6
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -123,7 +123,7 @@ this.ScenarioInitialize(scenarioInfo);
             {
                 this.ScenarioStart();
 #line 7
- testRunner.Given("A product is created", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+ testRunner.Given("A product exists", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 8
  testRunner.And(string.Format("There are {0} items available", availableQuantity), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");

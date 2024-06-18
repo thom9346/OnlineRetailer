@@ -3,8 +3,8 @@
 A short summary of the feature
 
 @tag1
-Scenario: Check availability of product
-	Given A product is created
+Scenario Outline: Customer orders a specified quantity of items
+	Given A product exists
 	And There are <AvailableQuantity> items available
 	And The customer wants <RequiredQuantity> items
 	When the status is checked
